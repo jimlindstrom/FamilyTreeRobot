@@ -83,7 +83,7 @@ describe MediaWiki::FamilyTree::Robot, "#get" do
   end
   it "returns a MediaWiki::Page object" do
     robot = MediaWiki::FamilyTree::Robot.new(base_url, normal_prefix, special_prefix, person_db_filename)
-    String(robot.get('James Brian Lindstrom').class).should == "MediaWiki::Page"
+    robot.get('James Brian Lindstrom').class.should == MediaWiki::Page
   end
 end
 

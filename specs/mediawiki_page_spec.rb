@@ -43,7 +43,7 @@ describe MediaWiki::Page, "#get_person" do
     page_content=`cat "specs/testvectors/James Brian Lindstrom.html"`
     page = MediaWiki::Page.new(page_title, page_content)
     person = page.get_person
-    [person["name"],person["parents"]].should == ['James ("Jim") Brian Lindstrom','[[Randall Eugene Lindstrom]]&lt;br />[[Jill Marie Linn]]']
+    [person["name"],person["parents"]].should == ['James ("Jim") Brian Lindstrom','[[Randall Eugene Lindstrom]]<br />[[Jill Marie Linn]]']
   end
 
   it "removes <ref> tags" do
@@ -51,7 +51,7 @@ describe MediaWiki::Page, "#get_person" do
     page_content=`cat "specs/testvectors/Eric Jacob Lindstrom.html"`
     page = MediaWiki::Page.new(page_title, page_content)
     person = page.get_person
-    [person["name"],person["parents"]].should == ['Eric Jacob Lindstrom','[[Randall Eugene Lindstrom]]&lt;br />[[Jill Marie Linn]]']
+    [person["name"],person["parents"]].should == ['Eric Jacob Lindstrom','[[Randall Eugene Lindstrom]]<br />[[Jill Marie Linn]]']
   end
 end
 

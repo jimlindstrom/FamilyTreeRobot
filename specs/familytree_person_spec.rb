@@ -36,6 +36,14 @@ describe FamilyTree::Person do
     it "returns a list of the person's parents" do
       @person.parents.should == ['Randall Eugene Lindstrom', 'Jill Marie Linn']
     end
+    it "only returns people" do
+      @page_title  ="Richard Arscott"
+      @page_content ="{{Needs_research}}\n\n{{Infobox person\n| name              = Richard Arscott\n| birth_date        = \n| birth_place       = Ashwater, Devon, England<ref>[[Visitation of the County of Devon in the Year 1620]]</ref>\n| death_date        = 1437<ref>[[Visitation of the County of Devon in the Year 1620]] (p. 10)</ref>\n| death_place       = \n| resting_place     = \n| spouse            = Joane _____<ref>[[Visitation of the County of Devon in the Year 1620]]</ref>\n| children          = [[John Arscott (1469)]]<ref>[[Visitation of the County of Devon in the Year 1620]]</ref>\n| parents           = [[Robert Arscott]]<br />[[Joane Tilley]]<ref>[[Visitation of the County of Devon in the Year 1620]]</ref>\n}}\n\nRichard's mother, Joane, is the daughter of Nicholas Tilley<ref>[[Visitation of the County of Devon in the Year 1620]]</ref>.\n\nTo do: Mom/Grandfather may be trace-able...\n\n==Notes==\n{{Reflist}}\n" 
+      @page = MediaWiki::Page.new(@page_title, @page_content)
+      @person_hash = @page.get_person
+      @person_richard = FamilyTree::Person.new(@page_title, @person_hash)
+      @person_richard.parents.should == ["Robert Arscott","Joane Tilley"]
+    end
   end
 
   describe "#children" do

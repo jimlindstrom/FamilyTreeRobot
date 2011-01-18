@@ -2,7 +2,7 @@ module FamilyTree
 
   class TreeHelpers
   
-    def self.print_nested_relative_list(a, print_li=false)
+    def self.get_nested_relative_string(a, print_li=false)
       str = ""
 
       if a.class == Array
@@ -19,7 +19,7 @@ module FamilyTree
           while !a.empty? do
             cur_elem = a.shift
             raise "Assertion failed !" unless cur_elem.class == Array
-            str += self.print_nested_relative_list(cur_elem, true)
+            str += self.get_nested_relative_string(cur_elem, true)
           end
           str += "</ul>\n"
         end

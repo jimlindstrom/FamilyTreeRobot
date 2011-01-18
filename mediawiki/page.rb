@@ -4,6 +4,8 @@ module MediaWiki
     def initialize(page_title, page_content)
       @page_title   = page_title
       @page_content = page_content
+
+      @page_content.gsub!(/&lt;/,'<')
     end
   
     def contains_person
@@ -24,7 +26,7 @@ module MediaWiki
           val = $2
   
           # get rid of unwanted markup
-          val.gsub!(/&lt;ref>[^\&]*&lt;\/ref>/, "") # clean up ref tags
+          val.gsub!(/<ref>[^<]*<\/ref>/, "") # clean up ref tags
   
           # store value
           person[key] = val
