@@ -40,6 +40,14 @@ module FamilyTree
       return true
     end
 
+    def get_all_people
+      all_people = []
+      @store.transaction do
+        all_people = @store.roots
+      end
+      all_people
+    end
+
     def exists(page_title)
       return !load(page_title).nil?
     end

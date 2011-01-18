@@ -129,3 +129,27 @@ describe MediaWiki::FamilyTree::Robot, "#change_callback" do
   end
 end
 
+describe MediaWiki::FamilyTree::Robot, "#get_all_person_pages" do
+  it "returns a list" do
+    robot = MediaWiki::FamilyTree::Robot.new(base_url, normal_prefix, special_prefix, person_db_filename)
+    robot.get_all_person_pages.class.should == Array
+  end
+  it "returns a list of all the person pages on the mediawiki" do
+    robot = MediaWiki::FamilyTree::Robot.new(base_url, normal_prefix, special_prefix, person_db_filename)
+    robot.get_all_person_pages.index("Gustaf Lindstrom").nil?.should == false
+    robot.get_all_person_pages.length.should > 300
+  end
+end
+
+describe MediaWiki::FamilyTree::Robot, "#retrieve_all_people" do
+  it "retrieves all remote pages and adds them to the database" do
+    robot = MediaWiki::FamilyTree::Robot.new(base_url, normal_prefix, special_prefix, person_db_filename)
+    all_person_pages = robot.get_all_person_pages
+    robot.retrieve_all_people
+    robot = nil
+
+    person_db = FamilyTree::PersonDB.new(person_db_filename)
+    all_person_pages.sort.should == person_db.get_all_people.sort
+  end
+end
+

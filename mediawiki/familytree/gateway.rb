@@ -13,7 +13,7 @@ module MediaWiki
   module FamilyTree
 
     class Gateway < MediaWiki::Gateway
-    
+     
       def recent_changes(num_changes, end_time)
         titles = []
         form_data =
@@ -32,7 +32,19 @@ module MediaWiki
         titles = REXML::XPath.match(res, "//rc").map { |x| x.attributes["title"] }
         titles
       end
-    
+
+      def get_all_person_pages
+        titles = []
+        form_data =
+          {'action' => 'query',
+          'list' => 'categorymembers',
+          'cmtitle' => 'Category:Articles_with_hCards',
+          'cmlimit' => '5000'}
+        res = make_api_request(form_data)
+        titles = REXML::XPath.match(res, "//cm").map { |x| x.attributes["title"] }
+        titles
+      end
+     
     end
   end
 

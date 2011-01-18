@@ -179,11 +179,20 @@ describe FamilyTree::PersonDB do
     end
   end
 
-  describe "#descendants_of" do
-    it "returns empty list if person not in the database" do
-      @person_db.descendants_of("George Delphin Lindstrom").should == ["George Delphin Lindstrom", ["Dean Randall Lindstrom", ["Randall Eugene Lindstrom", ["James Brian Lindstrom"], ["Eric Jacob Lindstrom"]], ["William Darrel Lindstrom"], ["Shirley Jean Lindstrom"], ["Cynthia Lee Lindstrom"], ["Tonja Sue Lindstrom"]], ["Larry George Lindstrom"]]
+  describe "#get_all_people" do
+    it "returns empty list if empty database" do
+      @person_db = FamilyTree::PersonDB.new("/tmp/testperson.db")
+      @person_db.reset
+      @person_db.get_all_people.empty?.should == true
+    end
+    it "returns a tree of the page_titles (strings) of people who are ancestors of the person" do
+      @person_db = FamilyTree::PersonDB.new("/tmp/testperson.db")
+      @person_db.reset
+      @person_db.save(@person_james)
+      @person_db.save(@person_jill)
+      @person_db.save(@person_dean)
+      @person_db.get_all_people.sort.should == ["Dean Randall Lindstrom", "James Brian Lindstrom", "Jill Marie Linn"]
     end
   end
-
 
 end

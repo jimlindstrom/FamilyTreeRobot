@@ -31,6 +31,8 @@ module MediaWiki
         @thread = nil
     
       end
+
+      # these are primitives used internally and/or for specing other methods
       
       def login(user, pass)
         return @mw.login(user, pass)
@@ -47,9 +49,13 @@ module MediaWiki
       def exists(page_title)
         return ! @mw.get(page_title).nil?
       end
-    
+     
       def recent_changes(num_changes, end_time)
         return @mw.recent_changes(num_changes, end_time)
+      end
+
+      def get_all_person_pages
+        return @mw.get_all_person_pages
       end
      
       def get(page_title)
@@ -59,6 +65,8 @@ module MediaWiki
         end
         return MediaWiki::Page.new(page_title, page_content)
       end
+
+      # these are methods you actually should use:
 
       def start
         @thread = Thread.new { main_loop }
@@ -91,6 +99,11 @@ module MediaWiki
         }
       end
  
+      def retrieve_all_people
+		person_list = get_all_person_pages
+        change_callback(person_list)
+      end
+
      private
 
       def main_loop
