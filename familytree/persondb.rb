@@ -32,7 +32,10 @@ module FamilyTree
 
     def reset
       @store = nil # not sure if we need to delete the in-memory copy while we delete the file-based copy, but here's a try...
-      File.delete(@db_filename)
+      begin
+        File.delete(@db_filename)
+      rescue Errno::ENOENT
+      end
       @store = PStore.new(@db_filename)
       return true
     end

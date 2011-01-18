@@ -2,17 +2,17 @@
 
 require 'mediawiki/familytree/gateway'
 require 'mediawiki/page'
+require 'familytree/person'
+require 'familytree/persondb'
 
 module MediaWiki
   module FamilyTree
     class Robot
-      TMP_PAGE = '/tmp/pageidx.hmtl'
       AGENT_STR = 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.4) Gecko/20100513 Firefox/3.6.4'
       API_SUFFIX = '/api.php'
-      LOGIN_SUFFIX = '/index.php?title=Special:UserLogin'
-      NORMAL_PAGE_SUFFIX = '/index.php?title='
+      MAINLOOP_SLEEP_SECS = 60.0
     
-      def initialize(base_url, normal_prefix, special_prefix)
+      def initialize(base_url, normal_prefix, special_prefix, person_db_filename)
         @base_url = base_url
         @normal_prefix = normal_prefix
         @special_prefix = special_prefix
@@ -25,6 +25,10 @@ module MediaWiki
         @agent.follow_meta_refresh = true
     
         @mw = MediaWiki::FamilyTree::Gateway.new(@base_url + @normal_prefix + API_SUFFIX)
+
+        @person_db = ::FamilyTree::PersonDB.new(person_db_filename)
+
+        @thread = nil
     
       end
       
@@ -47,7 +51,48 @@ module MediaWiki
       def recent_changes(num_changes, end_time)
         return @mw.recent_changes(num_changes, end_time)
       end
+     
+      def get(page_title)
+        page_content = @mw.get(page_title)
+        if page_content.nil?
+          return nil
+        end
+        return MediaWiki::Page.new(page_title, page_content)
+      end
+
+      def start
+        @thread = Thread.new { main_loop }
+      end
+
+      def stop
+        @thread.kill
+      end
+
+      def is_running
+        return false if @thread.nil?
+        return true unless @thread.status.nil? or @thread.status == false
+        return false
+      end
     
+      def change_callback(titles)
+        puts "MediaWiki::FamilyTree::Robot -- Change callback."
+        titles.each { |cur_title|
+          puts "\tRetrieving new copy of \"#{cur_title}\""
+          @cur_page = get(cur_title)
+          if @cur_page.contains_person
+            puts "\tIs a person.  Saving to DB."
+            @person_hash = @cur_page.get_person
+            @person = ::FamilyTree::Person.new(cur_title, @person_hash)
+            @person_db.save(@person)
+          else
+            puts "\tDoes not contain a person."
+          end
+
+        }
+      end
+ 
+     private
+
       def main_loop
         prev_time  = Time.new.getgm
         while true
@@ -57,26 +102,14 @@ module MediaWiki
           if !titles.nil? and !titles.empty?
             change_callback(titles)
           else
-            puts "no changes."
+            #puts "MediaWiki::FamilyTree::Robot -- no changes."
           end
     
-          sleep 60.0      
+          sleep MAINLOOP_SLEEP_SECS
           prev_time = cur_time
         end
       end
-    
-      def change_callback(titles)
-        puts "Change callback.  Titles = " + titles.join(',')
-      end
-    
-      def get(page_title)
-        page_content = @mw.get(page_title)
-        if page_content.nil?
-          return nil
-        end
-        return MediaWiki::Page.new(page_title, page_content)
-      end
-    
+      
     end
 
   end
