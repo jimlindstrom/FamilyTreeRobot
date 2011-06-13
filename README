@@ -3,12 +3,15 @@ mediawiki-based genealogy site.
 
 BACKGROUND:
 
-Wikipedia has defined an extensible 'person' table, with which users can embed 
-structured information a person into an unstructured, curated page about the 
-person.  I have taken this same approach for my family tree at jimlindstrom.com.
+Wikipedia has defined an extensible 'person' table (see: 
+http://en.wikipedia.org/wiki/Template:Infobox_person), with which users can 
+embed structured information a person into an unstructured, curated page about 
+the person.  I have taken this same approach for my family tree site at 
+jimlindstrom.com (see: 
+http://jimlindstrom.com/mediawiki/index.php?title=James_Brian_Lindstrom).
 The unstructured page is human-consumable reading/browsing, while the 
-structured data allows me to do interesting things like plotting the 
-migrations of my family:
+structured data allows me to do interesting things like plotting the migrations
+of my family:
 
 http://jimlindstrom.com/family_viz/migration_map.html?name=James%20Brian%20Lindstrom
 
