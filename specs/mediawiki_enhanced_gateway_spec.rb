@@ -6,14 +6,7 @@ require './familytree/persondb'
 
 DO_MESSY_TESTS = false # These tests muck with the 'recent_changes' list and so I try to minimize them
 
-MW_OPTS        = {:base_url       => "http://jimlindstrom.com",
-                  :normal_prefix  => "/mediawiki",
-                  :special_prefix => "/mediawiki"}
 API_SUFFIX     = '/api.php'
-ROBOT_ACCT     = {:user           => "robot",
-                  :pass           => "robotpass"}
-DB_OPTS        = {:type           => :pstore, 
-                  :filename       => "/tmp/person_db.pstore"}
 
 def rand_alphanumeric_str(len)
   o =  [('a'..'z'),('A'..'Z'),('0'..'9')].map{|i| i.to_a}.flatten;  
@@ -23,7 +16,14 @@ end
 describe MediaWiki::EnhancedGateway do
    
   before(:each) do
-    api_url = MW_OPTS[:base_url] + MW_OPTS[:normal_prefix] + API_SUFFIX
+
+    # Read configuration
+    config      = YAML.load_file 'config/robot_config_pstore.yml'
+    @mw_opts    = config["mw_opts"]
+    @db_opts    = config["db_opts"]
+    @robot_acct = config["robot_acct"]
+
+    api_url = @mw_opts[:base_url] + @mw_opts[:normal_prefix] + API_SUFFIX
     @gateway = MediaWiki::EnhancedGateway.new(api_url, {:ignorewarnings=>1})
 
     @bogus_user = rand_alphanumeric_str(10)
@@ -39,19 +39,19 @@ describe MediaWiki::EnhancedGateway do
   describe "#login" do
     it "throws MediaWiki::Unauthorized if bad password" do
       lambda {
-        @gateway.login(ROBOT_ACCT[:user], @bogus_password)
+        @gateway.login(@robot_acct[:user], @bogus_password)
       }.should raise_error(MediaWiki::Unauthorized)
     end
   
     it "throws MediaWiki::Unauthorized if bad username" do
       lambda {
-        @gateway.login(@bogus_user, ROBOT_ACCT[:pass])
+        @gateway.login(@bogus_user, @robot_acct[:pass])
       }.should raise_error(MediaWiki::Unauthorized)
     end
   
     it "doesn't throw anything if good credentials" do
       lambda {
-        @gateway.login(ROBOT_ACCT[:user], ROBOT_ACCT[:pass])
+        @gateway.login(@robot_acct[:user], @robot_acct[:pass])
       }.should_not raise_error(MediaWiki::Unauthorized)
     end
   end
@@ -90,7 +90,7 @@ describe MediaWiki::EnhancedGateway do
       if DO_MESSY_TESTS
         t = Time.new
         starttime = t.getgm
-        @gateway.login(ROBOT_ACCT[:user], ROBOT_ACCT[:pass])
+        @gateway.login(@robot_acct[:user], @robot_acct[:pass])
         @gateway.create(@nonexistant_page, "Testing page creation")
         @gateway.delete(@nonexistant_page)
         pages = @gateway.recent_changes(nil,starttime).length.should >= 1 
@@ -105,12 +105,12 @@ describe MediaWiki::EnhancedGateway do
       if DO_MESSY_TESTS
         t = Time.new
         starttime = t.getgm
-        @gateway.login(ROBOT_ACCT[:user], ROBOT_ACCT[:pass])
+        @gateway.login(@robot_acct[:user], @robot_acct[:pass])
         @gateway.create(@nonexistant_page, "Testing page creation")
         @gateway.recent_changes(nil,starttime).should == [ { :type => "new", :title => @nonexistant_page } ] # FIXME: needs to take into account revision_id
         @gateway.delete(@nonexistant_page)
       else
-        @gateway.login(ROBOT_ACCT[:user], ROBOT_ACCT[:pass])
+        @gateway.login(@robot_acct[:user], @robot_acct[:pass])
         @gateway.recent_changes(10,nil)[0].keys.should == [:type, :title, :revision_id]
       end
     end
@@ -142,7 +142,7 @@ describe MediaWiki::EnhancedGateway do
         @gateway.retrieve_all_people
         robot = nil
     
-        person_db = FamilyTree::PersonDB.create(DB_OPTS)
+        person_db = FamilyTree::PersonDB.create(@db_opts)
         all_person_pages.sort.should == person_db.get_all_people.sort
       end
     end

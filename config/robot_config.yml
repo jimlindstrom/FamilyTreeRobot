@@ -1,0 +1,18 @@
+db_opts:
+  !ruby/sym type: !ruby/sym postgres
+  !ruby/sym host: localhost
+  !ruby/sym port:    
+  !ruby/sym options: 
+  !ruby/sym tty:     
+  !ruby/sym dbname: people
+  !ruby/sym user: jim
+  !ruby/sym pass: password
+
+mw_opts:
+  !ruby/sym base_url: 'http://jimlindstrom.com'
+  !ruby/sym normal_prefix: /mediawiki
+  !ruby/sym special_prefix: /mediawiki
+
+robot_acct:
+  !ruby/sym user: robot
+  !ruby/sym pass: robotpass

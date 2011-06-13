@@ -1,23 +1,19 @@
 #!/usr/bin/env ruby
 
+require 'rubygems'
+require 'yaml'
 require './mediawiki/page'
 require './familytree/person'
 require './familytree/persondb'
 require './familytree/treehelpers'
 
+# Read configuration
+config      = YAML.load_file 'config/robot_config.yml'
+@mw_opts    = config["mw_opts"]
+@db_opts    = config["db_opts"]
+@robot_acct = config["robot_acct"]
 
-#db_opts = {:type => :pstore, :filename => "person_db.pstore"}
-
-db_opts = {:type => :postgres,
-           :host => 'localhost',
-           :port => nil,
-           :options => nil,
-           :tty => nil,
-           :dbname => 'people',
-           :user => 'jim',
-           :pass => 'password'}
-
-@person_db = FamilyTree::PersonDB.create(db_opts)
+@person_db = FamilyTree::PersonDB.create(@db_opts)
 
 starting_person = ARGV.shift
 myancestors = @person_db.ancestors_of(starting_person, 20)

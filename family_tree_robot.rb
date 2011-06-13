@@ -1,33 +1,21 @@
 #!/usr/bin/env ruby
 
 require 'rubygems'
+require 'yaml'
 require 'thread'
 require './familytree/robot'
 
-# Robot credentials on mediawiki
-ROBOT_ACCT = {:user => "robot",
-              :pass => "robotpass"}
-
-# Mediawiki host & URL
-MW_OPTS = {:base_url       => "http://jimlindstrom.com",
-           :normal_prefix  => "/mediawiki",
-           :special_prefix => "/mediawiki"}
-
-# filename where person DB is stored
-DB_OPTS = {:type    => :postgres,
-           :host    => 'localhost',
-           :port    => nil,
-           :options => nil,
-           :tty     => nil,
-           :dbname  => 'people',
-           :user    => 'jim',
-           :pass    => 'password'}
+# Read configuration
+config     = YAML.load_file 'config/robot_config.yml'
+mw_opts    = config["mw_opts"]
+db_opts    = config["db_opts"]
+robot_acct = config["robot_acct"]
 
 # Useful for testing
 Thread.abort_on_exception = true
 
-robot = FamilyTree::Robot.new(MW_OPTS, DB_OPTS)
-#robot.login(ROBOT_ACCT[:user], ROBOT_ACCT[:pass])
+robot = FamilyTree::Robot.new(mw_opts, db_opts)
+#robot.login(robot_acct[:user], robot_acct[:pass])
 if !robot.handle_args(ARGV)
   exit
 end

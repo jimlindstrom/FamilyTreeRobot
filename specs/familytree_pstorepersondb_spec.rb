@@ -9,9 +9,14 @@ require './specs/familytree_persondb_spec'
 describe FamilyTree::PStorePersonDB do
 
   let(:create_persondb) {
-    db_type = :pstore
-    db_opts = {:filename => "person_db.pstore"}
-    @person_db = FamilyTree::PersonDB.create(db_type, db_opts)
+
+    # Read configuration
+    config      = YAML.load_file 'config/robot_config_pstore.yml'
+    #@mw_opts    = config["mw_opts"]
+    @db_opts    = config["db_opts"]
+    #@robot_acct = config["robot_acct"]
+
+    @person_db = FamilyTree::PersonDB.create(@db_opts)
     @person_db.reset
   }
 

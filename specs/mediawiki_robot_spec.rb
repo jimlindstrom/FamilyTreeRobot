@@ -2,12 +2,6 @@
 
 require './mediawiki/robot'
 
-MW_OPTS        = {:base_url       => "http://jimlindstrom.com",
-                  :normal_prefix  => "/mediawiki",
-                  :special_prefix => "/mediawiki"}
-ROBOT_ACCT     = {:user           => "robot",
-                  :pass           => "robotpass"}
-
 def wait_on_condition(max_retries, wait_time, condition)
 
   retries = max_retries
@@ -45,7 +39,14 @@ end
 describe MediaWiki::Robot do
   
   before(:each) do
-    @robot = RobotWithTestHarness.new(MW_OPTS)
+
+    # Read configuration
+    config      = YAML.load_file 'config/robot_config_pstore.yml'
+    @mw_opts    = config["mw_opts"]
+    #@db_opts    = config["db_opts"]
+    @robot_acct = config["robot_acct"]
+
+    @robot = RobotWithTestHarness.new(@mw_opts)
   end
  
   describe "#start" do
@@ -60,7 +61,7 @@ describe MediaWiki::Robot do
 
     it "doesn't call 'handle_single_change' unless a page on the mediawiki is changed" do
       @robot.start
-      @robot.mw.login(ROBOT_ACCT[:user], ROBOT_ACCT[:pass])
+      @robot.mw.login(@robot_acct[:user], @robot_acct[:pass])
 
       last_change = @robot.get_last_change
       last_change.nil?.should == true
@@ -70,7 +71,7 @@ describe MediaWiki::Robot do
 
     it "calls 'handle_single_change' when a page on the mediawiki is changed" do
       @robot.start
-      @robot.mw.login(ROBOT_ACCT[:user], ROBOT_ACCT[:pass])
+      @robot.mw.login(@robot_acct[:user], @robot_acct[:pass])
 
       rand_page = rand_alphanumeric_str(20)
       @robot.mw.create(rand_page, "Testing robot functionality")

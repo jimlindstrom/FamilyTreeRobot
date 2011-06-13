@@ -1,0 +1,12 @@
+db_opts:
+  !ruby/sym type: !ruby/sym pstore
+  !ruby/sym filename: /tmp/person_db.pstore
+
+mw_opts:
+  !ruby/sym base_url: 'http://jimlindstrom.com'
+  !ruby/sym normal_prefix: /mediawiki
+  !ruby/sym special_prefix: /mediawiki
+
+robot_acct:
+  !ruby/sym user: robot
+  !ruby/sym pass: robotpass
