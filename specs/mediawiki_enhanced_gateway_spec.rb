@@ -1,5 +1,7 @@
 # mediawiki_enhanced_gateway_spec.rb
 
+require 'rubygems'
+require 'yaml'
 require './mediawiki/enhanced_gateway'
 require './mediawiki/page'
 require './familytree/persondb'

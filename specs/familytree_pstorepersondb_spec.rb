@@ -1,5 +1,7 @@
 # familytree_pstorepersondb_spec.rb
 
+require 'rubygems'
+require 'yaml'
 require './mediawiki/page'
 require './familytree/person'
 require './familytree/persondb'

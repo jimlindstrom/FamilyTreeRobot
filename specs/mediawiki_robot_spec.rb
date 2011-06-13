@@ -1,5 +1,7 @@
 # mediawiki_robot_spec.rb
 
+require 'rubygems'
+require 'yaml'
 require './mediawiki/robot'
 
 def wait_on_condition(max_retries, wait_time, condition)
