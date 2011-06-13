@@ -1,0 +1,25 @@
+This is a robot for tracking, and creating a local mirror of, changes to a 
+mediawiki-based genealogy site.  
+
+BACKGROUND:
+
+Wikipedia has defined an extensible 'person' table, with which users can embed 
+structured information a person into an unstructured, curated page about the 
+person.  I have taken this same approach for my family tree at jimlindstrom.com.
+The unstructured page is human-consumable reading/browsing, while the 
+structured data allows me to do interesting things like plotting the 
+migrations of my family:
+
+http://jimlindstrom.com/family_viz/migration_map.html?name=James%20Brian%20Lindstrom
+
+USAGE:
+
+Invoking "./family_tree_robot.rb --reset-db --download-all" will cause the
+robot to reset its internal database and then re-download all pages from the
+site.  You can then leave the robot running, to sync against changes in real-
+time.
+
+Use "./print_my_ancestors.rb 'James Brian Lindstrom' > /tmp/ancestors.html" to 
+dump a textual tree view of your ancestors
+
+
