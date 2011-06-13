@@ -1,11 +1,14 @@
 module FamilyTree
 
   class Person
-    attr_accessor :page_title, :person_hash, :name, :spouses, :children, :parents, :birth_date, :death_date, :residences, :birth_place, :death_place, :resting_place
+    attr_accessor :page_title, :person_hash, :revision_id, :name, :spouses, :children, :parents, :birth_date, :death_date, :residences, :birth_place, :death_place, :resting_place
+
+    attr_accessor :precomputed_ancestors, :precomputed_descendants
   
-    def initialize(page_title, person_hash)
+    def initialize(page_title, person_hash, revision_id=0)
       self.page_title  = page_title
       self.person_hash = person_hash
+      self.revision_id = revision_id
   
       if !self.person_hash.nil?
         parse_name()

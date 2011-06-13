@@ -9,10 +9,9 @@ module FamilyTree
         cur_elem = a.shift
         raise "Assertion failed !" unless cur_elem.class == String
         if print_li == true
-          str += "<li>" + cur_elem + "\n"
-        else
-          str += cur_elem + "\n"
+          str += "<li>"
         end
+        str += "<a href='http://jimlindstrom.com/mediawiki/index.php?title=#{cur_elem}'>#{cur_elem}</a>\n"
 
         if !a.empty?
           str += "<ul>\n"

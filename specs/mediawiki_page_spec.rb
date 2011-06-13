@@ -1,6 +1,6 @@
 # mediawikipage_spec.rb
 
-require 'mediawiki/page'
+require './mediawiki/page'
 
 describe MediaWiki::Page, "#contains_person" do
 

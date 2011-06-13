@@ -1,6 +1,6 @@
 # familytree_persondb_spec.rb
 
-require 'familytree/treehelpers'
+require './familytree/treehelpers'
 
 describe FamilyTree::TreeHelpers do
 

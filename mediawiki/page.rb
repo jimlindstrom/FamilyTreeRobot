@@ -1,9 +1,12 @@
 module MediaWiki
 
   class Page
-    def initialize(page_title, page_content)
+    attr_accessor :revision_id
+
+    def initialize(page_title, page_content, revision_id=0)
       @page_title   = page_title
       @page_content = page_content
+      @revision_id  = revision_id
 
       @page_content.gsub!(/&lt;/,'<')
     end

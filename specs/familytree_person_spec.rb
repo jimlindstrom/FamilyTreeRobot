@@ -1,7 +1,7 @@
 # mediawikipage_spec.rb
 
-require 'mediawiki/page'
-require 'familytree/person'
+require './mediawiki/page'
+require './familytree/person'
 
 describe FamilyTree::Person do
 
