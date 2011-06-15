@@ -1,4 +1,10 @@
-# familytree_persondb_shared.rb
+# familytree_persondb_spec.rb
+
+require 'rubygems'
+require 'yaml'
+require './mediawiki/page'
+require './familytree/person'
+require './familytree/persondb'
 
 shared_examples_for 'FamilyTree::PersonDB' do
 
@@ -108,7 +114,6 @@ shared_examples_for 'FamilyTree::PersonDB' do
       @person_db.save(@person_james)
       @person_db.is_up_to_date("James Brian Lindstrom", 0).should == true
     end
-    end
   end
 
   describe "#ancestors_of" do
@@ -196,3 +201,40 @@ shared_examples_for 'FamilyTree::PersonDB' do
   end
 
 end
+
+describe FamilyTree::PStorePersonDB do
+
+  let(:create_persondb) {
+
+    # Read configuration
+    config      = YAML.load_file 'config/robot_config_pstore.yml'
+    #@mw_opts    = config["mw_opts"]
+    @db_opts    = config["db_opts"]
+    #@robot_acct = config["robot_acct"]
+
+    @person_db = FamilyTree::PersonDB.create(@db_opts)
+    @person_db.reset
+  }
+
+  it_should_behave_like 'FamilyTree::PersonDB'
+
+end
+  
+describe FamilyTree::PStorePersonDB do
+
+  let(:create_persondb) {
+
+    # Read configuration
+    config      = YAML.load_file 'config/robot_config_pstore.yml'
+    #@mw_opts    = config["mw_opts"]
+    @db_opts    = config["db_opts"]
+    #@robot_acct = config["robot_acct"]
+
+    @person_db = FamilyTree::PersonDB.create(@db_opts)
+    @person_db.reset
+  }
+
+  it_should_behave_like 'FamilyTree::PersonDB'
+
+end
+

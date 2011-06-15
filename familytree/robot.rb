@@ -1,15 +1,17 @@
 #!/usr/bin/env ruby
 
+require 'rubygems'
+
 require 'thread'
 
-require './mediawiki/robot'
+require 'mediawiki_robot'
 require './mediawiki/page'
 require './familytree/person'
 require './familytree/persondb'
 
 module FamilyTree
 
-  class Robot < MediaWiki::Robot
+  class Robot < MediawikiRobot::Robot
 
     HUGE_REVISION_ID = 100000
   
